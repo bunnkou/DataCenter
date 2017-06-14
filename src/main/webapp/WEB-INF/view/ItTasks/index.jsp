@@ -66,10 +66,10 @@
 			</table>
 		</div>
 		
-		<script type="text/javascript" src="./assets/js/datetimepicker/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="./assets/js/datetimepicker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
 		<script type="text/javascript">
 		$('.form_date').datetimepicker({
-			String:"yyyy-mm-dd",			
+			format:"yyyy-mm-dd",			
 			weekStart: 1,
 	        todayBtn:  1,
 			autoclose: 1,
