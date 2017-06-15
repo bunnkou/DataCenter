@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://"
@@ -15,15 +16,15 @@
 	<body>
 		<h1 class="page-header">数据操作</h1>
 		<div class="row">
-			<form class="form-horizontal" action="">
+			<form class="form-horizontal" action="<%=basePath%>ItTasks" method="POST">
 				<div class="form-group">
 					<label for="inputStartDatetime" class="col-sm-2 control-label">开始时间</label>
 					<div class="col-sm-2">
-						<input type="text" id="inputStartDatetime" class="form_date form-control">
+						<input type="text" id="inputStartDatetime" name="inputStartDatetime" class="form_date form-control">
 					</div>
 					<label for="inputEndDatetime" class="col-sm-2 control-label">结束时间</label>
 					<div class="col-sm-2">
-						<input type="text"  id="inputEndDatetime" class="form_date form-control">
+						<input type="text"  id="inputEndDatetime" name="inputEndDatetime" class="form_date form-control">
 					</div>
 				</div>
 				<div class="form-group">
@@ -35,35 +36,34 @@
 			</form>
 		</div>
 		
-		<h2 class="sub-header">Section title</h2>
+		<c:if test="${ requestScope.task_list != null }">
+		<h2 class="sub-header">查询结果</h2>
 		<div class="table-responsive">
 			<table class="table table-striped">
 			  <thead>
 			    <tr>
-			      <th>#</th>
-			      <th>Header</th>
-			      <th>Header</th>
-			      <th>Header</th>
-			      <th>Header</th>
+			      <th width="10%">申请人</th>
+			      <th width="10%">申请时间</th>
+			      <th width="50%">申请内容</th>
+			      <th width="10%">处理人</th>
+			      <th width="10%">完成时间</th>
+			      <th width="10%">评分</th>
 			    </tr>
 			  </thead>
 			  <tbody>
-			    <tr>
-			      <td>1,001</td>
-			      <td>Lorem</td>
-			      <td>ipsum</td>
-			      <td>dolor</td>
-			      <td>sit</td>
-			    </tr>
-			    <tr>
-			      <td>1,002</td>
-			      <td>amet</td>
-			      <td>consectetur</td>
-			      <td>adipiscing</td>
-			      <td>elit</td>
-			    </tr>
+			    <c:forEach items="${ requestScope.task_list }" var="task">
+			    	<tr>
+			    		<td>${ task.getRname() }</td>
+			    		<td>${ task.getRDateTime() }</td>
+			    		<td>${ task.getFDetail() }</td>
+			    		<td>${ task.getDName() }</td>
+			    		<td>${ task.getCDateTime() }</td>
+			    		<td>${ task.getMtGrade() }</td>
+			    	</tr>
+			    </c:forEach>
 			  </tbody>
 			</table>
+			</c:if>
 		</div>
 		
 		<script type="text/javascript" src="./assets/js/datetimepicker/bootstrap-datetimepicker.js" charset="UTF-8"></script>

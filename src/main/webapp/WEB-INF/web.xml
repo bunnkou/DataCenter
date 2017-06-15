@@ -4,6 +4,17 @@
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
 	http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
 	version="3.1">
+	
+	<!-- 配置 Spring 核心监听器，默认会以 /WEB-INF/applicationContext.xml 作为配置文件 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<!-- contextConfigLocation 参数来指定 Spring 的配置文件   -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/applicationContext.xml</param-value>
+	</context-param>
 	  
 	<servlet>
 	    <servlet-name>DataCenter</servlet-name>
@@ -17,6 +28,15 @@
 	<servlet-mapping>
 	    <servlet-name>DataCenter</servlet-name>
 	    <url-pattern>/</url-pattern>
+	</servlet-mapping>
+    
+	<servlet>
+	    <servlet-name>DruidStatView</servlet-name>
+	    <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>DruidStatView</servlet-name>
+	    <url-pattern>/druid/*</url-pattern>
 	</servlet-mapping>
     
 </web-app>
