@@ -9,7 +9,8 @@ public interface ItTaskMapper {
 	
 	List<ItTask> findWithCDateTime(
 			@Param("inputStartDatetime") String inputStartDatetime, 
-			@Param("inputEndDatetime") String inputEndDatetime
+			@Param("inputEndDatetime") String inputEndDatetime,
+			@Param("inputKeyword") String inputKeyword
 	);
 	
 }

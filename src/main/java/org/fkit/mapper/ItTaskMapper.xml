@@ -5,7 +5,15 @@
 <mapper namespace="org.fkit.mapper.ItTaskMapper">
 
 	<select id="findWithCDateTime" resultType="org.fkit.domain.ItTask">
-		SELECT * FROM ittasks WHERE CDateTime BETWEEN '2017-06-01' AND '2017-07-01'
+		<bind name="Keyword" value="'%'+ inputKeyword +'%'"/>
+		SELECT 
+		Rname_R, RDateTime, FDetail, DName_R, CDateTime, MtGrade, TIMESTAMPDIFF(MINUTE,RDateTime,CDateTime) AS TakingTime
+		FROM ittasks 
+		WHERE CDateTime BETWEEN #{inputStartDatetime} AND #{inputEndDatetime}
+		<if test="inputKeyword !=null and inputKeyword !=''">
+			AND CONCAT(Rname_R,FDetail,DName_R) LIKE #{Keyword}
+		</if>
+		ORDER BY CDateTime DESC
 	</select>
 	
 </mapper>

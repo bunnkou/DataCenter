@@ -10,5 +10,5 @@ public interface ItTaskService {
 	@param String inputEndDatetime
 	@return 找到返回 ItTask 对象，没有找到返回 NULL
 	*/
-	List<ItTask> findWithCDateTime(String inputStartDatetime, String inputEndDatetime);
+	List<ItTask> findWithCDateTime(String inputStartDatetime, String inputEndDatetime, String inputKeyword);
 }

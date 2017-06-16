@@ -5,15 +5,16 @@ import java.io.Serializable;
 public class ItTask implements Serializable {
 	private String UNID;
 	private String RDept;
-	private String Rname;
+	private String Rname_R;
 	private String RDateTime;
 	private String FDetail;
-	private String DName;
+	private String DName_R;
 	private String CDateTime;
 	private String Result;
 	private String MtGrade;
 	private String GradeReason;
 	private String ImSt;
+	private String TakingTime;
 	
 //	UNID
 	public String getUNID(){ return UNID; }
@@ -23,9 +24,9 @@ public class ItTask implements Serializable {
 	public String getRDept(){ return RDept; }
 	public void setRDept( String RDept ){ this.RDept = RDept; }
 
-//	Rname
-	public String getRname(){ return Rname; }
-	public void setRname( String Rname ){ this.Rname = Rname; }
+//	Rname_R
+	public String getRname_R(){ return Rname_R; }
+	public void setRname_R( String Rname_R ){ this.Rname_R = Rname_R; }
 	
 //	RDateTime
 	public String getRDateTime(){ return RDateTime; }
@@ -35,9 +36,9 @@ public class ItTask implements Serializable {
 	public String getFDetail(){ return FDetail; }
 	public void setFDetail( String FDetail ){ this.FDetail = FDetail; }
 	
-//	DName
-	public String getDName(){ return DName; }
-	public void setDName( String DName ){ this.DName = DName; }
+//	DName_R
+	public String getDName_R(){ return DName_R; }
+	public void setDName_R( String DName_R ){ this.DName_R = DName_R; }
 	
 //	CDateTime
 	public String getCDateTime(){ return CDateTime; }
@@ -58,5 +59,9 @@ public class ItTask implements Serializable {
 //	ImSt
 	public String getImSt(){ return ImSt; }
 	public void setImSt( String ImSt ){ this.ImSt = ImSt; }
+	
+//	TakingTime
+	public String getTakingTime(){ return TakingTime; }
+	public void setTakingTime( String TakingTime ){ this.TakingTime = TakingTime; }
 	
 }

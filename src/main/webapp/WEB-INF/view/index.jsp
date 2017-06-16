@@ -33,9 +33,6 @@
         <%@ include file="_leftSlider.jsp" %>
         
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-			<div class="row J_mainContent" id="content-main">
-			  <iframe id="J_iframe" width="100%" height="100%" src="<%=basePath%>ItTasks" frameborder="0" data-id="<%=basePath%>_ItTask_Query" seamless></iframe>
-			</div> 
         </div>		<!-- 右边内容 -->
         
       </div>

@@ -14,8 +14,8 @@ public class ItTaskServiceImpl implements ItTaskService {
 	private ItTaskMapper itTaskMapper;
 	
 	@Override
-	public List<ItTask> findWithCDateTime(String inputStartDatetime, String inputEndDatetime) {
-		return 	itTaskMapper.findWithCDateTime(inputStartDatetime, inputEndDatetime);
+	public List<ItTask> findWithCDateTime(String inputStartDatetime, String inputEndDatetime, String inputKeyword) {
+		return 	itTaskMapper.findWithCDateTime(inputStartDatetime, inputEndDatetime, inputKeyword);
 	}
 
 }
