@@ -13,6 +13,7 @@
    		<%@ include file="./../_css&js.jsp" %>
    		
    		<link href="./assets/js/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+   		<link href="./assets/js/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" media="screen">
 	</head>
 	<body>
 	
@@ -27,7 +28,7 @@
 		
 				<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="margin-top:50px;">
 					<h1 class="page-header">数据操作</h1>
-					<div class="row">
+					<div class="row query-block">
 						<form class="form-horizontal" action="<%=basePath%>ItTasks" method="POST">
 							<input type="hidden" name="inputOperate" id="inputOperate" value="0">
 							<div class="form-group">
@@ -48,60 +49,79 @@
 							</div>
 							<div class="form-group">
 								<div class="col-sm-offset-2 col-sm-2">
-									<button type="button" class="btn btn-default" onclick="submitIT(0);">查询</button>
+									<button type="button" class="btn btn-default" onclick="query();">查询</button>
 									<button type="button" class="btn btn-primary" onclick="submitIT(1);">导出</button>
 								</div>
 							</div>
 						</form>
 					</div>
-					
-					<c:if test="${ requestScope.task_list != null }">
+															
 					<h2 class="sub-header">查询结果</h2>
-					<div class="table-responsive">
-						<table class="table table-striped">
-						  <thead>
-						    <tr>
-						      <th width="13%">申请人</th>
-						      <th width="13%">申请时间</th>
-						      <th width="20%">申请内容</th>
-						      <th width="13%">处理人</th>
-						      <th width="13%">完成时间</th>
-						      <th width="13%">评分</th>
-						      <th width="13%">耗时（分）</th>
-						    </tr>
-						  </thead>
-						  <tbody>
-						    <c:forEach items="${ requestScope.task_list }" var="task">
-						    	<tr>
-						    		<td>${ task.getRname_R() }</td>
-						    		<td>${ task.getRDateTime() }</td>
-						    		<td>${ task.getFDetail() }</td>
-						    		<td>${ task.getDName_R() }</td>
-						    		<td>${ task.getCDateTime() }</td>
-						    		<td>${ task.getMtGrade() }</td>
-						    		<td>${ task.getTakingTime() }</td>
-						    	</tr>
-						    </c:forEach>
-						  </tbody>
-						</table>
-						</c:if>
-					</div>
-				
+					<table id="todoTBL" data-icon-size="outline" data-pagination="true" style="word-break:break-all; word-wrap:break-all;"></table>
+									
 			</div><!-- row -->		
 		</div><!-- container-fluid -->
 		
+		<script type="text/javascript" src="./assets/js/bootstrap-table/bootstrap-table.min.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="./assets/js/bootstrap-table/locale/bootstrap-table-zh-CN.min.js" charset="UTF-8"></script>
 		<script type="text/javascript" src="./assets/js/datetimepicker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
 		<script type="text/javascript">
-		$('.form_date').datetimepicker({
-			format:"yyyy-mm-dd",			
-			weekStart: 1,
-	        todayBtn:  1,
-			autoclose: 1,
-			todayHighlight: 1,
-			startView: 2,
-			minView: 2,
-			forceParse: 0
+		var $table = $('#todoTBL');
+		
+		$(document).ready(function(){
+			$('.form_date').datetimepicker({
+				format:"yyyy-mm-dd",			
+				weekStart: 1,
+		        todayBtn:  1,
+				autoclose: 1,
+				todayHighlight: 1,
+				startView: 2,
+				minView: 2,
+				forceParse: 0
+			});
 		});
+		
+		function query()
+		{
+			$table.bootstrapTable('destroy'); 
+			$table.bootstrapTable({
+				height: getHeight(),
+		    	url: "<%=request.getContextPath()%>/ItTasks/show",
+		    	queryParams: queryParams,
+		    	dataType: "json",
+		    	pagination: true,
+		    	pageSize: 20,
+				pageList: [20,50],
+				sidePagination: "server",
+			    columns: [
+			    	{field: 'rname_R', title: '申请人', width:'9%'},
+			    	{field: 'rdateTime', title: '申请时间', width:'13%'},
+			    	{field: 'fdetail', title: '申请内容', width:'32%'},
+			    	{field: 'dname_R', title: '处理人', width:'9%'},
+			    	{field: 'cdateTime', title: '完成时间', width:'13%'},
+			    	{field: 'mtGrade', title: '评分', width:'9%'},
+			    	{field: 'takingTime', title: '耗时（分）', width:'13%'}
+			    ]
+			});	
+		}
+		
+		function queryParams(params) {
+			var inputStartDatetime = $('#inputStartDatetime').val(),
+				inputEndDatetime = $('#inputEndDatetime').val(),
+				inputKeyword = $('#inputKeyword').val();
+			return {
+				pageSize: params.limit,
+				pageNumber: params.offset,
+				inputStartDatetime: inputStartDatetime,
+				inputEndDatetime: inputEndDatetime,
+				inputKeyword: inputKeyword
+			};
+		}
+		
+		function getHeight() {
+	        return $(window).height() - $('.query-block').outerHeight(true);
+	    }
+		
 		function submitIT(param){
 			$("#inputOperate").val(param);
 			$("form").submit();

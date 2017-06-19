@@ -3,17 +3,29 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="org.fkit.mapper.ItTaskMapper">
-
-	<select id="findWithCDateTime" resultType="org.fkit.domain.ItTask">
+	
+	<sql id="Where_Clause">
 		<bind name="Keyword" value="'%'+ inputKeyword +'%'"/>
-		SELECT 
-		Rname_R, RDateTime, FDetail, DName_R, CDateTime, MtGrade, TIMESTAMPDIFF(MINUTE,RDateTime,CDateTime) AS TakingTime
-		FROM ittasks 
 		WHERE CDateTime BETWEEN #{inputStartDatetime} AND #{inputEndDatetime}
 		<if test="inputKeyword !=null and inputKeyword !=''">
 			AND CONCAT(Rname_R,FDetail,DName_R) LIKE #{Keyword}
 		</if>
+	</sql>
+	
+	<select id="findWithCDateTime" resultType="org.fkit.domain.ItTask">
+		SELECT 
+		Rname_R, RDateTime, FDetail, DName_R, CDateTime, MtGrade, TIMESTAMPDIFF(MINUTE,RDateTime,CDateTime) AS TakingTime
+		FROM ittasks 
+		<include refid="Where_Clause" />
 		ORDER BY CDateTime DESC
+		<if test="page != -1">
+			LIMIT #{page}, #{rows}
+		</if>
+	</select>
+	
+	<select id="countBySpec" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM ittasks 
+		<include refid="Where_Clause" />
 	</select>
 	
 </mapper>

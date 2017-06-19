@@ -24,4 +24,19 @@
 		<property name="suffix" value=".jsp"></property>
 	</bean>
  	
+ 	<!-- @ResponseBody 注解支持-开始 -->
+ 	<mvc:annotation-driven>
+ 		<mvc:message-converters register-defaults="true">
+ 			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		 		<property name="supportedMediaTypes">
+		 			<list>
+		 				<value>application/json;charset=UTF-8</value>
+		 				<value>text/html;charset=UTF-8</value>
+		 			</list>
+		 		</property> 		
+		 	</bean>
+ 		</mvc:message-converters>
+ 	</mvc:annotation-driven>
+ 	<!-- @ResponseBody 注解支持-结束 -->
+ 	
 </beans>

@@ -26,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ItTaskController {
@@ -44,6 +45,23 @@ public class ItTaskController {
 		return "ItTasks/index";
 	}
 	
+	@RequestMapping(value="/ItTasks/show")
+	@ResponseBody
+	public Map<String, Object> show(HttpServletRequest request)
+	{
+		String inputStartDatetime = request.getParameter("inputStartDatetime"),
+			   inputEndDatetime =  request.getParameter("inputEndDatetime"),
+			   inputKeyword = request.getParameter("inputKeyword"),
+			   pageNumber = request.getParameter("pageNumber"),
+			   pageSize = request.getParameter("pageSize");
+		int page = pageNumber==null|pageNumber.equals("")?0:Integer.parseInt(pageNumber),
+			rows = pageSize==null|pageSize.equals("")?0:Integer.parseInt(pageSize);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("total", itTaskService.countBySpec(inputStartDatetime, inputEndDatetime, inputKeyword));
+		map.put("rows", itTaskService.findWithCDateTime(inputStartDatetime, inputEndDatetime, inputKeyword, page, rows));
+		return map;
+	}
+	
 	@RequestMapping(value="/ItTasks", method=RequestMethod.POST)
 	public String query(Model model, HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
@@ -51,11 +69,11 @@ public class ItTaskController {
 			   inputEndDatetime = request.getParameter("inputEndDatetime"),
 			   inputKeyword = request.getParameter("inputKeyword"),
 			   inputOperate = request.getParameter("inputOperate");
-		List<ItTask> task_list = itTaskService.findWithCDateTime(inputStartDatetime, inputEndDatetime, inputKeyword);
+		List<ItTask> task_list = itTaskService.findWithCDateTime(inputStartDatetime, inputEndDatetime, inputKeyword, -1, -1);
 
 		if(inputOperate.equals("1")){
 			String fileName = new Date().getTime() + ".xls",
-				   colTitle[] = {"ÉêÇëÈË","ÉêÇëÊ±¼ä","ÉêÇëÄÚÈİ","´¦ÀíÈË","Íê³ÉÊ±¼ä","ÆÀ·Ö","ºÄÊ±£¨·ÖÖÓ£©",""},
+				   colTitle[] = {"ç”³è¯·è€…","ç”³è¯·æ—¶é—´","ç”³è¯·å†…å®¹","å¤„ç†äºº","å®Œæˆæ—¶é—´","è¯„åˆ†","è€—æ—¶ï¼ˆåˆ†ï¼‰",""},
 				   Keys[] = {"Rname_R", "RDateTime", "FDetail", "DName_R", "CDateTime", "MtGrade", "TakingTime"};
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			
@@ -73,7 +91,7 @@ public class ItTaskController {
 				ttAvg += Long.parseLong(o.getTakingTime());
 				list.add(map);
 			}
-			String AvgTitle = "Æ½¾ùºÄÊ±£º" + ( ttAvg/task_list.size() );
+			String AvgTitle = "å¹³å‡è€—æ—¶ï¼š" + ( ttAvg/task_list.size() );
 			colTitle[7] = AvgTitle;
 			
 			try {

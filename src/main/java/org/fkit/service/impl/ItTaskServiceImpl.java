@@ -14,8 +14,14 @@ public class ItTaskServiceImpl implements ItTaskService {
 	private ItTaskMapper itTaskMapper;
 	
 	@Override
-	public List<ItTask> findWithCDateTime(String inputStartDatetime, String inputEndDatetime, String inputKeyword) {
-		return 	itTaskMapper.findWithCDateTime(inputStartDatetime, inputEndDatetime, inputKeyword);
+	public List<ItTask> findWithCDateTime(String inputStartDatetime, String inputEndDatetime, String inputKeyword, int page, int rows) {
+		return 	itTaskMapper.findWithCDateTime(inputStartDatetime, inputEndDatetime, inputKeyword, page, rows);
 	}
-
+	
+	@Override
+	public int countBySpec(String inputStartDatetime,	String inputEndDatetime, String inputKeyword)
+	{
+		return itTaskMapper.countBySpec(inputStartDatetime, inputEndDatetime, inputKeyword);
+	}
+	
 }
