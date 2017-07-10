@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.fkit.mapper.TcMapper">
+	
+	<sql id="Where_Clause">
+		<bind name="Keyword" value="'%'+ inputKeyword +'%'"/>
+		<foreach collection="yearLst" item="year" index="index">
+			<if test="index > 0">
+				UNION ALL
+			</if>
+			SELECT Name, DateStr, PJCode, PJName, Hour FROM timecard_#{year, jdbcType=BIGINT}
+			WHERE DateStr BETWEEN #{inputStartDatetime} AND #{inputEndDatetime}
+			<if test="inputKeyword !=null and inputKeyword !=''">
+				AND CONCAT(Name, PJCode, PJName) LIKE #{Keyword}
+			</if>
+			<![CDATA[
+				AND Hour <> 0
+			]]>
+		</foreach>
+	</sql>
+	
+	<select id="findWithDate" resultType="org.fkit.domain.Timecard">
+		SELECT * FROM (
+		<include refid="Where_Clause" />
+		) AS tc
+		<if test="page != -1">
+			LIMIT #{page}, #{rows}
+		</if>
+	</select>
+	
+	<select id="countBySpec" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM (
+		<include refid="Where_Clause" />
+		) AS tc
+	</select>
+	
+</mapper>

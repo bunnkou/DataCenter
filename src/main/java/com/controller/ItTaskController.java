@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.fkit.Utils.ExcelUtil;
@@ -34,14 +35,17 @@ public class ItTaskController {
 	@Autowired
 	private ItTaskService itTaskService;
 	
-	@RequestMapping(value="/", method=RequestMethod.GET)
-	public String index(Model model)
+	@RequestMapping(value={"/","/ItTasks"}, method=RequestMethod.GET)
+	public String index(Model model, HttpServletRequest request)
 	{
+		request.setAttribute("CURRENT_PAGE_NAME", "ItTasks");
+		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		model.addAttribute("inputEndDatetime", DateFormatUtils.format(cal.getTime() , "yyyy-MM-dd") );
 		cal.add(Calendar.MONTH, -1);
 		model.addAttribute("inputStartDatetime", DateFormatUtils.format(cal.getTime() , "yyyy-MM-dd") );
+		
 		return "ItTasks/index";
 	}
 	
@@ -69,12 +73,23 @@ public class ItTaskController {
 			   inputEndDatetime = request.getParameter("inputEndDatetime"),
 			   inputKeyword = request.getParameter("inputKeyword"),
 			   inputOperate = request.getParameter("inputOperate");
+		
+		model.addAttribute("inputStartDatetime", inputStartDatetime);
+		model.addAttribute("inputEndDatetime", inputEndDatetime);
+		model.addAttribute("inputKeyword", inputKeyword);
+		
 		List<ItTask> task_list = itTaskService.findWithCDateTime(inputStartDatetime, inputEndDatetime, inputKeyword, -1, -1);
-
+		
+		if( 0 == task_list.size() ){
+			model.addAttribute("errors", "没有检索到相关内容，请重新设置搜索范围！");
+			return "ItTasks/index";
+		}
+		
 		if(inputOperate.equals("1")){
 			String fileName = new Date().getTime() + ".xls",
 				   colTitle[] = {"申请者","申请时间","申请内容","处理人","完成时间","评分","耗时（分）",""},
-				   Keys[] = {"Rname_R", "RDateTime", "FDetail", "DName_R", "CDateTime", "MtGrade", "TakingTime"};
+				   Keys[] = {"Rname_R", "RDateTime", "FDetail", "DName_R", "CDateTime", "MtGrade", "TakingTime"},
+				   Types[] = {"", "", "", "", "", "", "int"};
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			
 			long ttAvg = 0;
@@ -90,12 +105,12 @@ public class ItTaskController {
 				map.put("TakingTime", o.getTakingTime());
 				ttAvg += Long.parseLong(o.getTakingTime());
 				list.add(map);
-			}
-			String AvgTitle = "平均耗时：" + ( ttAvg/task_list.size() );
+			}			
+			String AvgTitle = "平均耗时（分）：" + ( ttAvg/task_list.size() );
 			colTitle[7] = AvgTitle;
 			
 			try {
-				ExcelUtil.createWorkBook(list, Keys, colTitle).write(os);
+				ExcelUtil.createWorkBook(list, Keys, colTitle, Types).write(os);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -124,10 +139,7 @@ public class ItTaskController {
 			}
 			return null;
 		}
-		
-		model.addAttribute("inputStartDatetime", inputStartDatetime);
-		model.addAttribute("inputEndDatetime", inputEndDatetime);
-		model.addAttribute("inputKeyword", inputKeyword);
+				
 		model.addAttribute("task_list", task_list);
 		return "ItTasks/index";
 	}

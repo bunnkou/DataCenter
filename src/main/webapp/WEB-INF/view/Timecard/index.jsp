@@ -14,8 +14,7 @@
    		
    		<link href="./assets/js/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
    		<link href="./assets/js/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" media="screen">
-   		
-   		<title>IT任务单统计</title>
+   		   		
 	</head>
 	<body>
 	
@@ -24,26 +23,14 @@
     	
     	<div class="container-fluid">
       		<div class="row">
-    			
+    		
 	    		<!-- 左侧菜单 -->
 	        	<%@ include file="./../_leftSlider.jsp" %>	
 		
 				<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="margin-top:50px;">
 					<h1 class="page-header">数据操作</h1>
-					
-					<c:if test="${ not empty errors }">
-						<div class="alert alert-danger" role="alert">
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-							<c:forEach var="err" items="${ errors }" varStatus="status">
-								${ status.count } . ${ err }
-							</c:forEach>
-						</div>
-					</c:if>
-					
 					<div class="row query-block">
-						<form class="form-horizontal" action="<%=basePath%>ItTasks" method="POST">
+						<form class="form-horizontal" action="<%=basePath%>Timecard" method="POST">
 							<input type="hidden" name="inputOperate" id="inputOperate" value="0">
 							<div class="form-group">
 								<label for="inputStartDatetime" class="col-sm-2 control-label">开始时间</label>
@@ -76,18 +63,15 @@
 			</div><!-- row -->		
 		</div><!-- container-fluid -->
 		
-		<script type="text/javascript" src="./assets/js/bootstrap-table/bootstrap-table.min.js" charset="UTF-8"></script>
 		<script type="text/javascript" src="./assets/js/bootstrap-table/locale/bootstrap-table-zh-CN.min.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="./assets/js/bootstrap-table/bootstrap-table.min.js" charset="UTF-8"></script>
 		<script type="text/javascript" src="./assets/js/datetimepicker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-		<script type="text/javascript" src="./assets/js/datetimepicker/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
-		
 		<script type="text/javascript">
 		var $table = $('#todoTBL');
 		
 		$(document).ready(function(){
 			$('.form_date').datetimepicker({
-				format:"yyyy-mm-dd",		
-				language: 'zh-CN',
+				format:"yyyy-mm-dd",			
 				weekStart: 1,
 		        todayBtn:  1,
 				autoclose: 1,
@@ -103,7 +87,7 @@
 			$table.bootstrapTable('destroy'); 
 			$table.bootstrapTable({
 				height: getHeight(),
-		    	url: "<%=request.getContextPath()%>/ItTasks/show",
+		    	url: "<%=request.getContextPath()%>/Timecard/show",
 		    	queryParams: queryParams,
 		    	dataType: "json",
 		    	pagination: true,
@@ -111,13 +95,11 @@
 				pageList: [20,50],
 				sidePagination: "server",
 			    columns: [
-			    	{field: 'rname_R', title: '申请人', width:'9%'},
-			    	{field: 'rdateTime', title: '申请时间', width:'13%'},
-			    	{field: 'fdetail', title: '申请内容', width:'32%'},
-			    	{field: 'dname_R', title: '处理人', width:'9%'},
-			    	{field: 'cdateTime', title: '完成时间', width:'13%'},
-			    	{field: 'mtGrade', title: '评分', width:'9%'},
-			    	{field: 'takingTime', title: '耗时（分）', width:'13%'}
+			    	{field: 'name', title: '姓名', width:'15%'},
+			    	{field: 'pjcode', title: '项目编号', width:'30%'},
+			    	{field: 'pjname', title: '项目名称', width:'30%'},
+			    	{field: 'dateStr', title: '日期', width:'15%'},
+			    	{field: 'hour', title: '小时', width:'10%'}
 			    ]
 			});	
 		}
